@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>闭包的用途</h1>
+    <script>
+        // 闭包的概念：有权访问另一个函数作用域的中的变量
+        // 产生闭包的原因：1、return 一个函数 2、自执行函数 3、for 循环中有定时器 4、节流和防抖 5、回调函数 6、函数作为参数 7、柯里化
+        // 巧用闭包
+        function test() {
+            const data = {}
+            return {
+                set(key, value) {
+                    data[key] = value
+                },
+                get(key) {
+                    return data[key]
+                }
+            }
+        }
+        // 在很多库中，都会使用闭包，保证用户不可以随便的更改全局变量
+        // 本例中的 data 便只可以通过 set 赋值，get 取值，不会直接修改
+        const bar = test()
+        bar.set('name', 'zs')
+        console.log(bar.get('name'));
+    </script>
+</body>
+
+</html>

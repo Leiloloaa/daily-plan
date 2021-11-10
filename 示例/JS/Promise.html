@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>promise 用法</h1>
+    <script>
+        // promise 有三种状态 pending(待定的) fulfilled(满足的) rejected(失败的)
+        const p1 = new Promise((resolved, rejected) => {
+            // 执行了 resolved() 状态就变成了 fulfilled
+            // resolved()
+            // 执行了 rejected() 状态就变成了 rejected 并且会报错
+            // rejected()
+            // 两个方法都每执行的话，就是等待状态
+        })
+        console.log('p1', p1);
+
+        const p2 = new Promise(function test(resolve, reject) {
+            var timeOut = Math.random() * 2;
+            // console.log('set timeout to: ' + timeOut + ' seconds.');
+            setTimeout(function() {
+                if (timeOut < 1) {
+                    // console.log('call resolve()...');
+                    resolve('200 OK');
+                } else {
+                    // console.log('call reject()...');
+                    reject('500 timeout');
+                }
+            }, timeOut * 1000);
+        }).then((res) => {
+            console.log('res:', res);
+        }).catch((err) => {
+            console.log('err:', err);
+        })
+    </script>
+</body>
+
+</html>

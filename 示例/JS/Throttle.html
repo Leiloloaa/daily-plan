@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 200px;
+            height: 200px;
+            background-color: yellowgreen;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>节流</h1>
+    <div class="box" draggable="true"></div>
+
+    <script>
+        var boxDom = document.querySelector(".box");
+        // 节流：一段时间内，只执行一次某个操作；过了这一段时间，还有操作的话，继续执行新的操作！
+        // function throttle(fn, delay) {
+        //     var timer = null
+        //     return function() {
+        //         if (timer) return;
+        //         timer = setTimeout(() => {
+        //             fn()
+        //             timer = null
+        //         }, delay);
+        //     }
+        // }
+        // 节流函数 频繁的触发一个事件，但是一段时间内，只执行一次。过了这段时间，又可以执行
+        function throttle(fn, delay) {
+            // 定义一个 timer  
+            // 这个 timer 形成了闭包
+            var timer = null
+            return function() {
+                if (timer) return
+                timer = setTimeout(() => {
+                    fn()
+                    timer = null
+                }, delay);
+            }
+        }
+        boxDom.addEventListener('drag', throttle(() => {
+            console.log('test');
+        }, 2000))
+    </script>
+</body>
+
+</html>

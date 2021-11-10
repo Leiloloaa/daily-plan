@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>箭头函数</h1>
+    <script>
+        function foo(num) {
+            return (...rest) => {
+                // 箭头函数没有 this arguments
+                // 所以会去找上层函数的 arguments
+                // console.log(arguments[0]);
+                //如果一定要传 可以使用 扩展运算符
+                console.log(rest);
+            }
+        }
+        var bar = foo(123)
+        bar(456)
+
+        function bzz(num) {
+            return function() {
+                console.log(arguments[0]);
+            }
+        }
+        var baz = bzz()
+        baz() // 这种情况就是 undefined
+        baz(123) // 123
+    </script>
+</body>
+
+</html>
