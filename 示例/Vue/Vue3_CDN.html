@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@next"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1>CDN 方法引入</h1>
+        <ul>
+            <li>Staticfile CDN（国内） : https://cdn.staticfile.org/vue/3.0.5/vue.global.js</li>
+            <li>unpkg：https://unpkg.com/vue@next, 会保持和 npm 发布的最新的版本一致</li>
+            <li>cdnjs : https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.5/vue.global.js</li>
+        </ul>
+        <h1>示例</h1>
+        <h2>{{number}}</h2>
+        <h2>{{name}}</h2>
+    </div>
+    <script>
+        // 因为通过 cmd 的方式引入了，所以只需解构就可以了
+        const {
+            ref,
+            reactive,
+            toRefs,
+            createApp
+        } = Vue
+        const vm = {
+            setup() {
+                const number = ref(100)
+                const foo = reactive({
+                    name: 'zs'
+                })
+                return {
+                    number,
+                    ...toRefs(foo)
+                }
+            }
+        }
+        Vue.createApp(vm).mount('#app')
+    </script>
+</body>
+
+</html>
