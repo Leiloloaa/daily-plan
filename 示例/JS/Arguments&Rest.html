@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>Arguments对象 相关知识</h2>
+    <ul>
+        <li>Arguments 是一个对应于传递给函数的参数的类数组对象</li>
+        <li>Arguments 对象不是一个 Array 。它类似于 Array，但除了 length 属性和索引元素之外没有任何 Array 属性。例如，它没有 pop 方法。</li>
+    </ul>
+    <h2>Rest 剩余参数(es6 语法)</h2>
+    <ul>
+        <li>剩余参数语法允许我们将一个不定数量的参数表示为一个数组</li>
+    </ul>
+
+    <h2>剩余参数和 arguments对象的区别 剩余参数和 arguments对象之间的区别主要有三个：</h2>
+    <ul>
+        <li>剩余参数只包含那些没有对应形参的实参，而 arguments 对象包含了传给函数的所有实参。</li>
+        <li>arguments 对象不是一个真正的数组，而剩余参数是真正的 Array 实例，也就是说你能够在它上面直接使用所有的数组方法，比如 sort，map，forEach 或 pop。</li>
+        <li>arguments 对象还有一些附加的属性（如 callee 属性）</li>
+    </ul>
+    <script>
+        // 将 arguments 转换成真的 数组
+        var args = Array.prototype.slice.call(arguments);
+        var args = [].slice.call(arguments);
+
+        // ES2015
+        const args = Array.from(arguments);
+        const args = [...arguments];
+
+        function testArg(a, b, ...rest) {
+            //a 123 b 123
+            console.log(rest); // [456,789]
+        }
+
+        testArg(123, 123, 456, 789)
+
+        function arg() {
+            console.log(arguments);
+        }
+
+        arg(123, 456);
+        // Arguments(2)
+        // 0: 123
+        // 1: 456
+        // callee: ƒ arg()
+        // length: 2
+        // Symbol(Symbol.iterator): ƒ values()[[Prototype]]: Object
+
+        // Rest
+        function sum(...theArgs) {
+            return theArgs.reduce((previous, current) => {
+                return previous + current;
+            });
+        }
+
+        console.log(sum(1, 2, 3));
+        // expected output: 6
+
+        console.log(sum(1, 2, 3, 4));
+        // expected output: 10
+    </script>
+</body>
+
+</html>

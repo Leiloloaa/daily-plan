@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>this 相关的知识</h1>
+    <script>
+        // this 的箴言
+        // 1、this 永远指向调用它的函数
+        //    this 的值是在运行时获取到的
+        // 2、箭头函数没有 this
+        //    如果访问 this，则会从外部获取
+        let user = {
+            name: 'user'
+        }
+        let admin = {
+            name: 'admin'
+        };
+
+        function showName() {
+            alert(this.name)
+        };
+        user.f = showName;
+        admin.f = showName;
+        // user.f() // user
+        // admin.f() // admin
+        function arrowName(...rest) {
+            console.log(this);
+            console.log(rest);
+        }
+        // user.af = arrowName;
+        // admin.af = arrowName;
+        // user.af();
+        // admin.af();
+        arrowName.call(user)
+        arrowName.apply(admin, [123])
+
+        function showArrowName() {
+            const arrowName = () => {
+                // 这种情况 this 就会找外层的 this
+                console.log(this);
+            }
+            arrowName()
+        };
+    </script>
+</body>
+
+</html>

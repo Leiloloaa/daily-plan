@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>手写实现 call 、 apply</h1>
+    <ul>
+        <li>三个方法都是用来修改 this 的指向</li>
+        <li>call 的第二个参数是可以传多个，立即执行</li>
+        <li>apply 的第二参数是数组，立即执行</li>
+        <li>bind 的参数可以柯里化传参，稍后执行</li>
+    </ul>
+
+    <script>
+        // https: //github.com/sisterAn/JavaScript-Algorithms/issues/78
+        // 手写实现
+        // call
+        Function.prototype.myCall = function(context) {
+            // 将函数设为对象的属性
+            // 注意：非严格模式下, 
+            //   指定为 null 和 undefined 的 this 值会自动指向全局对象(浏览器中就是 window 对象)
+            //   值为原始值(数字，字符串，布尔值)的 this 会指向该原始值的自动包装对象(用 Object() 转换）
+            context = context ? Object(context) : window;
+            // 把函数绑定到 传入的 context 身上
+            // this 是 showName 调用的 myCall 所以 this 是 函数 showName
+            console.log(this);
+            context.fn = this;
+            // 执行该函数
+            let args = [...arguments].slice(1);
+            let result = context.fn(...args);
+
+            // 删除该函数
+            delete context.fn;
+            // 注意：函数是可以有返回值的
+            return result;
+        }
+        let admin = {
+            name: 'admin'
+        };
+        var name = 'user'
+
+        function showName() {
+            console.log(this.name)
+        };
+        showName() // 直接调用的 this 指向的 window
+        showName.myCall(admin, 123)
+
+        Function.prototype.myApply = function(context, arr) {
+            // 处理 context
+            context = context ? Object(context) : window;
+            // 将函数绑定到对象上
+            context.fn = this;
+            // 执行函数
+            let result
+            if (!arr) {
+                result = context.fn()
+            } else {
+                result = context.fn(...arr)
+            }
+            // 删除函数
+            delete context.fn
+            return result
+        }
+
+        function testApply(a, b) {
+            console.log(this.name + ',' + a + ',' + b);
+
+        }
+        testApply()
+        testApply.myApply(admin, [1, 2])
+    </script>
+</body>
+
+</html>

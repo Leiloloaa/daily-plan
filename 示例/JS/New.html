@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <H1>手写new</H1>
+    <script>
+        // 首先要知道 new 做了那几件事情
+        // 1、创建一个空对象
+        // 2、继承构造函数的原型
+        // 3、this 指向 obj，并调用构造函数
+        // 4、返回这个对象
+        let myNew = (fn, ...args) => {
+            let obj = {}
+            obj.__proto__ = fn.prototype
+            fn.apply(obj, args)
+            return obj
+        }
+    </script>
+</body>
+
+</html>
