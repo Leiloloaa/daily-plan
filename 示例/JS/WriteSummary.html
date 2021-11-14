@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>节流和防抖函数</h1>
+    <ul>
+        <li>节流函数：频繁的触发一个事件，它只在一段时间内触发一次；上拉刷新</li>
+        <li>防抖函数：频繁的触发一个事件，只触发最后一次；input 框输入</li>
+    </ul>
+
+    <h1>call、apply 和 bind</h1>
+    <ul>
+        <li>call 和 apply 的区别就是，前者是接受一个参数列表，而后者是接受一个数组；两种都是直接执行函数</li>
+        <li>bind 是返回一个函数，不是立即执行，并且可以柯里化传参</li>
+    </ul>
+
+    <h1>instanceof 和 typeof</h1>
+    <ul>它虽然可以判断基础数据类型（null 除外），但是引用数据类型中，除了 function 类型以外，其他的也无法判断
+        <li>两者都是用来判断类型时使用的</li>
+        <li>区别：typeof 会返回一个变量的基本类型，而 instanceof 是返回一个布尔值</li>
+        <li>区别：instanceof 可以准确地判断复杂类型，但是不能判断基础类型；因为它是在原型链查找是否相等</li>
+        <li>区别：typeof 可以判断基础类型和 function，其他的也不能判断；typeof 在判断复杂类型时，除了 function 是 function 外，其余的都是 object</li>
+        <li>额外说明：typeof null 判定为 object，是 javascript 早期设置的 bug，因为 javascript 认为，二进制的前 3 位是 0，就表示为对象；而 null 全是 0，自然就判定错了</li>
+    </ul>
+
+    <h1>Promise</h1>
+    <ul>
+        <li>Promise 是 ES6 新增加饿语法，目的是为了解决 回调地域 的难点</li>
+        <li>并且提供了一种优雅的方式实现异步编程</li>
+        <li>Promise 有三种状态：pending 初始状态、fulfilled 成功状态、reject 失败状态</li>
+        <li>Promise 表示承诺，一旦状态改变，便不能再次修改</li>
+    </ul>
+    <script>
+        // 节流函数 - 像我们乘坐地铁，道闸打开的时间是固定的
+        // 需要一个计时器，如果之前存在。那么就直接 return
+        // 否则就重新设置定时器，并且清空之前的 timer
+        function throttle(fn, delay) {
+            let timer = null
+            return function() {
+                if (timer) return
+                timer = setTimeout(() => {
+                    fn()
+                    timer = null
+                }, delay);
+            }
+        }
+        // 防抖函数 - 像我们乘坐公交，司机关门的时间是根据最后一个乘客上车的时间
+        // 每调用一次，计时器会重新计时
+        function debounce(fn, delay) {
+            let timer = null
+            return function() {
+                if (timer) {
+                    clearTimeout(timer)
+                }
+                timer = setTimeout(() => {
+                    fn()
+                }, delay);
+            }
+        }
+
+        // call
+        // 先判断传入 context 的类型，再给 context 添加函数，再传入参数运行函数，再删除函数，最后再返回结果
+        Function.prototype.call = function(context) {
+            context = context ? Object(context) : window
+            context.fn = this
+            let args = [...arguments].slice(1)
+            let result = context.fn(...args)
+            delete context.fn
+            return result
+        };
+        // apply
+        // 实现步骤和 call 类似，只是说要判断第二个参数是否是数组
+        Function.prototype.apply = function(context, arr) {
+            context = context ? Object(context) : window
+            context.fn = this
+            let result
+            if (!arr) {
+                result = context.fn()
+            } else {
+                result = context.fn(...arr)
+            }
+            delete context.fn
+            return result
+        };
+        // bind
+        // bind 有点特殊，因为它是返回一个函数，并且是可以 柯里化传参
+        // 首先必须保证调用它的 是一个函数，然后再绑定上下文 this，然后传参，然后返回一个 函数，还可以接受函数，再调用 apply
+        Function.prototype.bind = function(context) {
+            if (typeof this !== 'function') {
+                throw new Error('this is not function')
+            }
+            let self = this
+            let args = [...arguments].slice(1)
+            return function() {
+                let bindArgs = [...arguments].slice(1)
+                return self.apply(context, args.concat(bindArgs))
+            }
+        }
+
+        // instanceof
+        Function.prototype.instanceof = function(target, origin) {
+                while (target) {
+                    if (target.__proto__ === origin.prototype) {
+                        return true
+                    }
+                    target = target.__proto__
+                }
+                return false
+            }
+            // typeof
+            // TODO
+
+        // Promise
+        // 用法
+        // const test = new Promise(resolve,reject)
+        const PENDING = 'pending'
+        const FULFILLED = 'fulfilled'
+        const REJECTED = 'rejected'
+        class Promise {
+            constructor(executor) {
+                executor(this.resolve, this.reject)
+            }
+            status = PENDING
+            value = null
+            reason = null
+            resolve = value => {
+                if (state === 'PENDING') {
+                    status = FULFILLED
+                    this.value = value
+                }
+            }
+            reject = reason => {
+                if (status === 'PENDING') {
+                    status = REJECTED
+                    this.reason = reason
+                }
+            }
+        }
+        // test.then(resolve,reject)
+        class Promise {
+            constructor(executor) {
+                executor(this.resolve, this.reject)
+            }
+            status = PENDING
+            value = null
+            reason = null
+                // === 新增 ===
+            fulFilledCallBack = null
+            rejectedCallBack = null
+            resolve = value => {
+                if (this.state === PENDING) {
+                    this.status = FULFILLED
+                    this.value = value
+                    this.fulFilledCallBack && this.fulFilledCallBack(value)
+                }
+            }
+            reject = reason => {
+                if (this.status === PENDING) {
+                    this.status = REJECTED
+                    this.reason = reason
+                    this.rejectedCallBack && this.rejectedCallBack(reason)
+                }
+            }
+            then(fulFilledFn, rejectedFn) {
+                if (this.status === FULFILLED) {
+                    fulFilledFn(this.value)
+                } else if (this.status === REJECTED) {
+                    rejectedFn(this.reason)
+                } else if (this.status === PENDING) {
+                    this.fulFilledCallBack = fulFilledFn
+                    this.rejectedCallBack = rejectedFn
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
