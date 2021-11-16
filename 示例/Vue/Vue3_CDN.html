@@ -33,8 +33,13 @@
             setup() {
                 const number = ref(100)
                 const foo = reactive({
-                    name: 'zs'
+                    name: 'zs',
+                    number
                 })
+
+                foo.number++;
+                console.log(foo.number);
+                console.log(number.value);
                 return {
                     number,
                     ...toRefs(foo)
