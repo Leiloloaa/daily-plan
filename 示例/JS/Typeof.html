@@ -9,28 +9,29 @@
 </head>
 
 <body>
+    <h1>手写 typeof</h1>
     <script>
-        function myTypeof(params) {
-            const type = Object.prototype.toString.call(params).slice(8, -1).toLowerCase()
-            const map = {
+        function myTypeof(target) {
+            let type = Object.prototype.toString.call(target).slice(8, -1).toLowerCase()
+            let map = {
                 'number': true,
                 'string': true,
                 'boolean': true,
                 'undefined': true,
-                'bigint': true,
                 'symbol': true,
+                'bigint': true,
                 'function': true
             }
+            console.log(map[type] ? type : 'object');
             return map[type] ? type : 'object'
         }
-
         // 测试用例
         myTypeof(1)
         myTypeof('')
         myTypeof(false)
         myTypeof(null)
         myTypeof(undefined)
-        myTypeof(100000000000000000000000)
+        myTypeof(10000)
         myTypeof(Symbol())
         myTypeof(() => {})
         myTypeof([])

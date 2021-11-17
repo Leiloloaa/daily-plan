@@ -9,15 +9,21 @@
 </head>
 
 <body>
-    <h1>深浅拷贝</h1>
-
+    <h1>手写深浅拷贝</h1>
+    <ul>
+        <li>浅拷贝：shallowCopy 只考虑表层属性</li>
+        <li>深拷贝：deepCopy 需要考虑很多类型，例如 Date 类型、RegExp 类型、Function 以及 Array 和 Object</li>
+    </ul>
     <script>
         // 简易版
         // 只考虑普通对象属性，不考虑内置对象和函数
         function deepCopy(obj) {
-            let result = obj.constructor == Array ? [] : {}
+            let result = Array.isArray(obj) ? [] : {}
             if (typeof obj === "object") {
                 for (let i in obj) {
+                    // 如果是浅拷贝 就直接赋值
+                    // result[i] = obj[i]
+                    // 如果是深拷贝 如果 i 是对象就得 递归遍历
                     result[i] = typeof obj[i] === "object" ? deepCopy(obj[i]) : obj[i]
                 }
             } else {
@@ -56,49 +62,48 @@
         class DeepClone {
             cloneVal = null;
             constructor() {}
-            clone(val, map = new WeakMap()) {
-                let type = this.getType(val); //当是引用类型的时候先拿到其确定的类型
-                if (this.isObj(val)) {
+            clone(target, targetMap = new WeakMap()) {
+                let type = this.getType(target); //当是引用类型的时候先拿到其确定的类型
+                if (this.isObject(target)) {
                     switch (type) {
                         case 'date': //日期类型重新new一次传入之前的值，date实例化本身结果不变
-                            return new Date(val);
+                            return new Date(target);
                             break;
                         case 'regexp': //正则类型直接new一个新的正则传入source和flags即可
-                            console.log(val.source, val.flags);
-                            return new RegExp(val.source, val.flags);
+                            console.log(target.source, target.flags);
+                            return new RegExp(target.source, target.flags);
                             break;
                         case 'function': //如果是函数类型就直接通过function包裹返回一个新的函数，并且改变this指向
                             return function() {
-                                return val.call(this, ...arguments)
+                                return target.call(this, ...arguments)
                             }
                             break;
                         default:
-                            this.cloneVal = Array.isArray(val) ? [] : {};
-                            if (map.has(val)) return map.get(val)
-                            map.set(val, this.cloneVal)
-                            for (let key in val) {
-                                if (val.hasOwnProperty(key)) { //判断是不是自身的key
-                                    this.cloneVal[key] = new DeepClone().clone(val[key], map);
+                            this.cloneVal = Array.isArray(target) ? [] : {};
+                            if (targetMap.has(target)) return targetMap.get(target)
+                            targetMap.set(target, this.cloneVal)
+                            for (let key in target) {
+                                if (target.hasOwnProperty(key)) { //判断是不是自身的key
+                                    this.cloneVal[key] = new DeepClone().clone(target[key], targetMap);
                                 }
                             }
                             return this.cloneVal;
                     }
                 } else {
-                    return val; //当是基本数据类型的时候直接返回
+                    return target; //当是基本数据类型的时候直接返回
                 }
             };
             /** 判断是否是引用类型 */
-            isObj(val) {
-                return (typeof val == 'object' || typeof val == 'function') && val != null
+            isObject(value) {
+                return (typeof value == 'object' || typeof value == 'function') && value != null
             };
             /** 获取类型 */
-            getType(data) {
-                var s = Object.prototype.toString.call(data);
+            getType(value) {
+                var s = Object.prototype.toString.call(value);
                 // return s.match(/\[object (.*?)\]/)[1].toLowerCase();
                 return s.slice(8, -1).toLowerCase();
             };
         }
-
         b = new DeepClone().clone(a)
         a.e = null
         console.log(a);
