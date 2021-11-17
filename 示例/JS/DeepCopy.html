@@ -24,7 +24,9 @@
                     // 如果是浅拷贝 就直接赋值
                     // result[i] = obj[i]
                     // 如果是深拷贝 如果 i 是对象就得 递归遍历
-                    result[i] = typeof obj[i] === "object" ? deepCopy(obj[i]) : obj[i]
+                    if (obj.hasOwnProperty(i)) {
+                        result[i] = typeof obj[i] === "object" ? deepCopy(obj[i]) : obj[i]
+                    }
                 }
             } else {
                 result = obj
