@@ -22,6 +22,18 @@
             fn.apply(obj, args)
             return obj
         }
+
+        // new 主要做了四件事情
+        // 创造一个空对象
+        // 继承这个 fn 的原型 实例的__proto__ 是指向 prototype 的
+        // 绑定 this 并执行这个函数
+        // 返回这个实例对象
+        function myNew(fn, ...arg) {
+            let obj = {}
+            obj.__proto__ = fn.prototype
+            fn.apply(this, [...arg])
+            return obj
+        }
     </script>
 </body>
 

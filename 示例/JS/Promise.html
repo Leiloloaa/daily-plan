@@ -38,6 +38,50 @@
         }).catch((err) => {
             console.log('err:', err);
         })
+
+        // 手写简单版 promise
+        const PENDING = 'pending'
+        const FULFILLED = 'fulfilled'
+        const REJECTED = 'rejected'
+
+        class MyPromise {
+            constructor(executor) {
+                executor(this.resolve, this.reject)
+            };
+            // 定义变量
+            status = PENDING
+            value = null
+            reason = null
+            fulFilledCallBack = null
+            rejectedCallBack = null
+
+            resolve = (value) => {
+                if (this.status === PENDING) {
+                    this.status === FULFILLED
+                    this.value = value
+                    fulFilledCallBack && fulFilledCallBack(value)
+                }
+            }
+
+            reject = (reason) => {
+                if (this.status === PENDING) {
+                    this.status === REJECTED
+                    this.reason = reason
+                    rejectedCallBack && rejectedCallBack(reason)
+                }
+            }
+
+            then(fulFilledFn, rejectedFn) {
+                if (this.status === FULFILLED) {
+                    fulFilledFn(this.value)
+                } else if (this.status === REJECTED) {
+                    rejectedFn(this.reason)
+                } else if (this.status === PENDING) {
+                    this.fulFilledCallBack = fulFilledFn
+                    this.rejectedCallBack = rejectedFn
+                }
+            }
+        }
     </script>
 </body>
 
