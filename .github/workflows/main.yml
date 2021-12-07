@@ -3,7 +3,7 @@ on:
     - cron: '1 16 * * *'
 
 jobs:
-  create_issues_action:
+  create-daily-plan-issue:
     runs-on: ubuntu-latest
     name: create daily plan issue
     steps:
@@ -11,7 +11,5 @@ jobs:
         uses: actions/checkout@v2
       - name: create daily plan issue action step
         uses: Leiloloaa/create-daily-plan-issue-action@main
-        env:
-          TOKEN: ${{ secrets.TOKEN }}
         with:
           token: ${{secrets.TOKEN}}
