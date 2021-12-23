@@ -3,23 +3,23 @@
 // 元素的顺序可以改变。 你不需要考虑数组中超出新长度后面的元素。
 
 // 采用 快慢 双指针法
+// 利用一个快指针先走，如果是等于传入的值，那么慢指针就不走，直到不等于传入的值的时候，slowIndex 才会 ++
 
 function removeVal(arr, val) {
     let fastIndex = 0,
         slowIndex = 0
-
     while (fastIndex < arr.length) {
         if (arr[fastIndex] !== val) {
-            arr[slowIndex++] = arr[fastIndex]
+            arr[slowIndex++] = arr[fastIndex++]
+        } else {
+            arr[slowIndex] = arr[fastIndex++]
         }
-        fastIndex++
     }
-
-    return arr
+    return arr.slice(0, slowIndex)
 }
 
-let nums = [3, 2, 2, 3],
-    val = 3
+let nums = [3, 2, 2, 3, 1, 2, 3, 4, 5, 6, 2, 3],
+    val = 2
 
 const res = removeVal(nums, val)
 console.log(res);
